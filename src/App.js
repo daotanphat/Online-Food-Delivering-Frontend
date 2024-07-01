@@ -1,10 +1,19 @@
-import logo from './logo.svg';
 import './App.css';
+import { Navbar } from './component/Navbar/Navbar';
+import { ThemeProvider } from '@emotion/react';
+import { darkTheme } from './theme/DarkTheme';
+import { CssBaseline } from '@mui/material';
+import Home from './component/Home/Home';
+import MultiItemCarousel from './component/Home/MultiItemCarousel';
 
 function App() {
   return (
     <div className="App">
-        <h1 className='text-blue-600'>Phat Food</h1>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <Navbar />
+        <Home />
+      </ThemeProvider>
     </div>
   );
 }
