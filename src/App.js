@@ -7,17 +7,21 @@ import Home from './component/Home/Home';
 import RestaurantDetails from './component/Restaurant/RestaurantDetails';
 import Footer from './component/Footer/Footer';
 import Cart from './component/Cart/Cart';
+import Profile from './component/Profile/Profile';
+import CustomerRouter from './Routers/CustomerRouter';
 
 function App() {
   return (
     <div className="App">
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
-        <Navbar />
+        {/* <Navbar /> */}
         {/* <Home /> */}
         {/* <RestaurantDetails /> */}
-        <Cart />
-        <Footer />
+        {/* <Cart /> */}
+        {/* <Profile />
+        <Footer /> */}
+        <CustomerRouter />
       </ThemeProvider>
     </div>
   );
