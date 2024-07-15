@@ -17,7 +17,6 @@ const RegisterForm = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const handleSubmit = (values) => {
-        console.log("values: ", values);
         dispatch(registerUser({ userData: values, navigate }))
     }
     return (
