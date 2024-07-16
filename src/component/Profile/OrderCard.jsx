@@ -1,7 +1,7 @@
 import { Button, Card } from '@mui/material'
 import React from 'react'
 
-const OrderCard = () => {
+const OrderCard = (item) => {
     return (
         <Card className='flex justify-between items-center p-5'>
             <div className='flex items-center space-x-5'>
@@ -12,11 +12,11 @@ const OrderCard = () => {
                 />
                 <div>
                     <p>Pizza</p>
-                    <p>60$</p>
+                    <p>{new Intl.NumberFormat().format(item.item.totalPrice)} $</p>
                 </div>
             </div>
             <div>
-                <Button disabled className='cursor-not-allowed'>Completed</Button>
+                <Button disabled className='cursor-not-allowed'>{item.item.status}</Button>
             </div>
         </Card>
     )

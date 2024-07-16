@@ -8,6 +8,7 @@ import Payment from './Payment';
 import Notifications from './Notifications';
 import Event from './Event';
 import Logout from './Logout';
+import Address from './Address';
 
 const Profile = () => {
     const [openSideBar, setOpenSideBar] = useState(false);
@@ -20,6 +21,7 @@ const Profile = () => {
                 <Routes>
                     <Route path='/' element={<UserProfile />} />
                     <Route path='/orders' element={<Orders />} />
+                    <Route path='/address' element={<Address />} />
                     <Route path='/favorites' element={<Favorites />} />
                     <Route path='/payment' element={<Payment />} />
                     <Route path='/notifications' element={<Notifications />} />
