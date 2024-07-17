@@ -17,7 +17,7 @@ function App() {
 
   useEffect(() => {
     dispatch(getUser(authJwt || jwt))
-    // dispatch(getCartByUserId(jwt))
+    dispatch(getCartByUserId(jwt))
   }, [])
   return (
     <div className="App">
