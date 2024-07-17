@@ -39,7 +39,9 @@ export const getFoodCategoryByRestaurantId = ({ restaurantId, jwt }) => async (d
                 Authorization: `Bearer ${jwt}`
             }
         })
-        dispatch({ type: GET_FOOD_CATEGORY_BY_RESTAURANT_ID_SUCCESS, payload: data })
+        // setTimeout(() => {
+            dispatch({ type: GET_FOOD_CATEGORY_BY_RESTAURANT_ID_SUCCESS, payload: data })
+        // }, 1000);
     } catch (error) {
         dispatch({ type: GET_FOOD_CATEGORY_BY_RESTAURANT_ID_FAILURE, payload: error })
         console.log(error);
