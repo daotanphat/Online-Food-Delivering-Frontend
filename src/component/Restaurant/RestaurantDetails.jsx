@@ -7,13 +7,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getRestaurantById } from '../State/Restaurant/Actions';
 import { useParams } from 'react-router-dom';
 import { getFoodCategoryByRestaurantId } from '../State/FoodCategory/Actions';
-import { getFoodByRestaurant } from '../State/Food/Actions';
+import { getFoodByRestaurant, getFoodByRestaurantAndFilter } from '../State/Food/Actions';
 
 const foodTypes = [
     { id: 1, label: "All", value: "all" },
-    { id: 2, label: "Vegeterian only", value: "vegeterian" },
-    { id: 3, label: "Non-vegeterian", value: "non_vegeterian" },
-    { id: 4, label: "Seasonal", value: "seasonal" }
+    { id: 2, label: "Vegeterian", value: "vegeterian" },
+    { id: 3, label: "Seasonal", value: "seasonal" }
 ]
 const RestaurantDetails = () => {
     // const renderCount = useRef(0);
@@ -28,11 +27,12 @@ const RestaurantDetails = () => {
     const [foodType, setFoodType] = useState("all")
     const [selectedCategory, setSelectedCategory] = useState("")
     const handleFilter = (e) => {
-        console.log(e.target.value, e.target.name);
+        setFoodType(e.target.value)
     }
 
-    console.log("category: ", category);
-    console.log("restaurant: ", restaurant);
+    // console.log("category: ", category);
+    // console.log("restaurant: ", restaurant);
+    // console.log("food", foods);
 
     useEffect(() => {
         dispatch(getRestaurantById({ id: id, jwt: jwt }))
@@ -40,8 +40,10 @@ const RestaurantDetails = () => {
     }, [])
 
     useEffect(() => {
-        dispatch(getFoodByRestaurant({ restaurantId: id, jwt }))
-    }, [selectedCategory])
+        //dispatch(getFoodByRestaurant({ restaurantId: id, jwt }))
+        if (foodType === "all") dispatch(getFoodByRestaurant({ restaurantId: id, jwt }))
+        else dispatch(getFoodByRestaurantAndFilter({ restaurantId: id, jwt, foodType }))
+    }, [selectedCategory, foodType])
 
     return (
         <div className='px-5 lg:px-20 pb-10'>
