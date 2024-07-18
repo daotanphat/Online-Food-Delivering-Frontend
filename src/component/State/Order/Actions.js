@@ -10,6 +10,9 @@ export const createOrder = ({ requestOrder, jwt }) => async (dispatch) => {
                 Authorization: `Bearer ${jwt}`
             }
         })
+        if(response.data.payment_url){
+            window.location.href = response.data.payment_url
+        }
         dispatch({ type: CREATE_ORDER_SUCCESS, payload: response.data })
     } catch (error) {
         console.log(error);
