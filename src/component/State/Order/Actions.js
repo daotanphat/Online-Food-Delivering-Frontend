@@ -2,7 +2,7 @@ import { api } from "../../Config/Api"
 import { CREATE_ORDER_FAILURE, CREATE_ORDER_REQUEST, CREATE_ORDER_SUCCESS, GET_ORDER_BY_USER_FAILURE, GET_ORDER_BY_USER_REQUEST, GET_ORDER_BY_USER_SUCCESS } from "./ActionTypes"
 
 export const createOrder = ({ requestOrder, jwt }) => async (dispatch) => {
-    console.log("hello");
+    console.log("hello", requestOrder, jwt);
     dispatch({ type: CREATE_ORDER_REQUEST })
     try {
         const response = await api.post(`/api/order`, requestOrder, {
@@ -10,9 +10,10 @@ export const createOrder = ({ requestOrder, jwt }) => async (dispatch) => {
                 Authorization: `Bearer ${jwt}`
             }
         })
-        if(response.data.payment_url){
-            window.location.href = response.data.payment_url
-        }
+        console.log("data", response);
+        // if(response.data.payment_url){
+        //     window.location.href = response.data.payment_url
+        // }
         dispatch({ type: CREATE_ORDER_SUCCESS, payload: response.data })
     } catch (error) {
         console.log(error);
