@@ -3,12 +3,12 @@ import { Navbar } from './component/Navbar/Navbar';
 import { ThemeProvider } from '@emotion/react';
 import { darkTheme } from './theme/DarkTheme';
 import { CssBaseline } from '@mui/material';
-import CustomerRouter from './Routers/CustomerRouter';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useRef } from 'react';
 import { getUser } from './component/State/Authentication/Action';
 import { getCartByUserId } from './component/State/Cart/Actions';
 import { BrowserRouter } from 'react-router-dom';
+import Router from './Routers/Router';
 
 function App() {
   const dispatch = useDispatch()
@@ -24,7 +24,7 @@ function App() {
       <BrowserRouter>
         <ThemeProvider theme={darkTheme}>
           <CssBaseline />
-          <CustomerRouter />
+          <Router />
         </ThemeProvider>
       </BrowserRouter>
     </div>
