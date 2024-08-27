@@ -1,8 +1,12 @@
 import { AddPhotoAlternate, Close } from '@mui/icons-material';
 import { Box, Button, Chip, CircularProgress, FormControl, Grid, IconButton, InputLabel, MenuItem, OutlinedInput, Select, TextField } from '@mui/material';
 import { useFormik } from 'formik'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { uploadImageToCloudinary } from '../Utils/UpLoadToCloudinary';
+import { useDispatch, useSelector } from 'react-redux';
+import { createFood } from '../../component/State/Food/Actions';
+import { getFoodCategoryByRestaurantId } from '../../component/State/FoodCategory/Actions';
+import { getIngredientItemsByRestaurant } from '../../component/State/IngredientItem/Actions';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -28,12 +32,15 @@ const initialValues = {
 }
 const CreateMenuForm = () => {
     const [uploadImage, setUploadImage] = useState(false);
+    const dispatch = useDispatch();
+    const jwt = localStorage.getItem("jwt");
+    const restaurantId = useSelector(state => state.restaurant.restaurant.id);
     const formik = useFormik({
         initialValues,
         onSubmit: (values) => {
             values.restaurantId = 2
             console.log(values);
-
+            dispatch(createFood({ requestData: values, jwt: jwt }))
         }
     });
     const handleImageChange = async (event) => {
@@ -48,6 +55,22 @@ const CreateMenuForm = () => {
         updatedImage.splice(index, 1)
         formik.setFieldValue("images", updatedImage)
     }
+
+    useEffect(() => {
+        dispatch(getFoodCategoryByRestaurantId({ restaurantId, jwt }))
+    }, [])
+    useEffect(() => {
+        dispatch(getIngredientItemsByRestaurant({ restaurantId: restaurantId, jwt: jwt }))
+    }, [])
+    const categories = useSelector(state => state.category.categories)
+    const ingredients = useSelector(state => state.ingredientItem.ingredientItems)
+
+    console.log("TEST", categories);
+    console.log("TEST2", ingredients);
+
+
+
+
     return (
         <div className='py-10 px-5 lg:flex items-center justify-center min-h-screen'>
             <div className='lg:max-w-4xl'>
@@ -152,9 +175,7 @@ const CreateMenuForm = () => {
                                     label="Category"
                                     onChange={formik.handleChange}
                                 >
-                                    <MenuItem value={10}>Ten</MenuItem>
-                                    <MenuItem value={20}>Twenty</MenuItem>
-                                    <MenuItem value={30}>Thirty</MenuItem>
+                                    {categories.map((category) => <MenuItem value={category.id}>{category.name}</MenuItem>)}
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -178,12 +199,12 @@ const CreateMenuForm = () => {
                                     )}
                                     MenuProps={MenuProps}
                                 >
-                                    {["bread", "sauce"].map((name, index) => (
+                                    {ingredients.map((ingredient, index) => (
                                         <MenuItem
                                             key={index}
-                                            value={name}
+                                            value={ingredient.id}
                                         >
-                                            {name}
+                                            {ingredient.name}
                                         </MenuItem>
                                     ))}
                                 </Select>

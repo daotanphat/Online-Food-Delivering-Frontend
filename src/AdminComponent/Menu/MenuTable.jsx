@@ -1,12 +1,25 @@
 import { Create, Delete } from '@mui/icons-material';
 import { Box, Card, CardActions, CardHeader, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { deleteFood, getFoodByRestaurant } from '../../component/State/Food/Actions';
 
 
 const orders = [1, 1, 1, 1];
 const MenuTable = () => {
     const navigate = useNavigate();
+    const restaurant = useSelector(state => state.restaurant.restaurant)
+    const dispatch = useDispatch()
+    const jwt = localStorage.getItem("jwt")
+    useEffect(() => {
+        dispatch(getFoodByRestaurant({ restaurantId: restaurant.id, jwt: jwt }))
+    }, [])
+    const handleDelete = (foodId) => {
+        dispatch(deleteFood({ foodId: foodId, jwt: jwt }))
+    }
+    const menu = useSelector(state => state.food.foods)
+
 
     return (
         <Box>
@@ -23,8 +36,9 @@ const MenuTable = () => {
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
                         <TableHead>
                             <TableRow>
+                                <TableCell align="left">#</TableCell>
                                 <TableCell align="left">Image</TableCell>
-                                <TableCell align="left">Title</TableCell>
+                                <TableCell align="left">Name</TableCell>
                                 <TableCell align="left">Ingredients</TableCell>
                                 <TableCell align="left">Price</TableCell>
                                 <TableCell align="left">Avaibility</TableCell>
@@ -32,18 +46,21 @@ const MenuTable = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {orders.map((row) => (
+                            {menu.map((row, index) => (
                                 <TableRow
-                                    key={row.name}
+                                    key={index}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
-                                    <TableCell align="left">{"image"}</TableCell>
-                                    <TableCell align="left">{10}</TableCell>
-                                    <TableCell align="left">{"food 1"}</TableCell>
-                                    <TableCell align="left">{"ingredients"}</TableCell>
-                                    <TableCell align="left">{"ingredients"}</TableCell>
+                                    <TableCell align="left">{index + 1}</TableCell>
                                     <TableCell align="left">
-                                        <IconButton>
+                                        <img src={row.images[0]} style={{ width: '60px', height: 'auto' }} />
+                                    </TableCell>
+                                    <TableCell align="left">{row.name}</TableCell>
+                                    <TableCell align="left">{row.ingredients.map((ingredient) => ingredient.name).join(', ')}</TableCell>
+                                    <TableCell align="left">{row.price}</TableCell>
+                                    <TableCell align="left">{row.available ? 'Available' : 'Not Available'}</TableCell>
+                                    <TableCell align="left">
+                                        <IconButton onClick={() => handleDelete(row.id)}>
                                             <Delete />
                                         </IconButton>
                                     </TableCell>

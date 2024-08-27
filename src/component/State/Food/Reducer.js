@@ -1,4 +1,4 @@
-import { GET_FOOD_BY_RESTAURANT_ID_FAILURE, GET_FOOD_BY_RESTAURANT_ID_REQUEST, GET_FOOD_BY_RESTAURANT_ID_SUCCESS, GET_FOOD_BY_SEARCH_AND_FILTER_FAILURE, GET_FOOD_BY_SEARCH_AND_FILTER_REQUEST, GET_FOOD_BY_SEARCH_AND_FILTER_SUCCESS } from "./ActionTypes";
+import { CREATE_FOOD_FAILURE, CREATE_FOOD_REQUEST, CREATE_FOOD_SUCCESS, DELETE_FOOD_FAILURE, DELETE_FOOD_REQUEST, DELETE_FOOD_SUCCESS, GET_FOOD_BY_RESTAURANT_ID_FAILURE, GET_FOOD_BY_RESTAURANT_ID_REQUEST, GET_FOOD_BY_RESTAURANT_ID_SUCCESS, GET_FOOD_BY_SEARCH_AND_FILTER_FAILURE, GET_FOOD_BY_SEARCH_AND_FILTER_REQUEST, GET_FOOD_BY_SEARCH_AND_FILTER_SUCCESS } from "./ActionTypes";
 
 const initialState = {
     food: null,
@@ -11,6 +11,8 @@ export const foodReducer = (state = initialState, action) => {
     switch (action.type) {
         case GET_FOOD_BY_RESTAURANT_ID_REQUEST:
         case GET_FOOD_BY_SEARCH_AND_FILTER_REQUEST:
+        case CREATE_FOOD_REQUEST:
+        case DELETE_FOOD_REQUEST:
             return {
                 ...state,
                 loading: true,
@@ -29,6 +31,15 @@ export const foodReducer = (state = initialState, action) => {
                 error: null,
                 foods: action.payload
             }
+        case CREATE_FOOD_SUCCESS:
+        case DELETE_FOOD_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                error: null,
+            }
+        case DELETE_FOOD_FAILURE:
+        case CREATE_FOOD_FAILURE:
         case GET_FOOD_BY_RESTAURANT_ID_FAILURE:
         case GET_FOOD_BY_SEARCH_AND_FILTER_FAILURE:
             return {
