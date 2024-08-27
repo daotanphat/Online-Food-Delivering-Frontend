@@ -22,7 +22,7 @@ export const registerUser = (requestData) => async (dispatch) => {
 export const loginUser = (requestData) => async (dispatch) => {
     dispatch({ type: LOGIN_REQUEST })
     try {
-        const { data } = await api.post(`/login`, requestData.userData)
+        const { data } = await api.post(`/auth/login`, requestData.userData)
         if (data.jwt) localStorage.setItem("jwt", data.jwt);
         if (data.role === "RESTAURANT_OWNER") {
             requestData.navigate("/admin/restaurant")

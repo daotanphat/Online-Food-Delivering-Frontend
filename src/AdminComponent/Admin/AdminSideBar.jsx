@@ -22,11 +22,12 @@ const AdminSideBar = ({ handleClose }) => {
     const isSmallScreen = useMediaQuery("(max-width: 1080px)")
 
     const handleNavigate = (item) => {
-        navigate(`/admin/restaurant${item.path}`);
         if (item.title === 'Logout') {
-            navigate('');
+            navigate('/');
             dispatch(logOut())
             handleClose()
+        }else{
+            navigate(`/admin/restaurant${item.path}`);
         }
     }
 
