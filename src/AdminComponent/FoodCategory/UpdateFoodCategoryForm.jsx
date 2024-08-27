@@ -1,22 +1,25 @@
 import { Button, TextField } from '@mui/material'
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { createFoodCategory } from '../../component/State/FoodCategory/Actions';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { updateFoodCategoryById } from '../../component/State/FoodCategory/Actions';
 
-const CreateFoodCategoryForm = () => {
+const UpdateFoodCategoryForm = ({ category }) => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const [formData, setFormData] = useState({ categoryName: "", categoryDescription: "" })
     const jwt = localStorage.getItem("jwt")
 
+
+    const [formData, setFormData] = useState({
+        categoryName: category.name,
+        categoryDescription: category.description
+    });
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = {
             name: formData.categoryName,
             description: formData.categoryDescription
         }
-        dispatch(createFoodCategory({ foodCategoryData: data, jwt: jwt }))
+        dispatch(updateFoodCategoryById({ foodCategoryId: category.id, foodCategoryData: data, jwt: jwt }))
     }
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -24,11 +27,12 @@ const CreateFoodCategoryForm = () => {
             ...formData, [name]: value
         })
     }
+
     return (
         <div className=''>
             <div className='p-5'>
                 <h1 className='text-gray-400 text-center text-xl pb-10'>
-                    Create Category
+                    Update Category
                 </h1>
                 <form
                     className='space-y-4'
@@ -67,4 +71,4 @@ const CreateFoodCategoryForm = () => {
     )
 }
 
-export default CreateFoodCategoryForm
+export default UpdateFoodCategoryForm
