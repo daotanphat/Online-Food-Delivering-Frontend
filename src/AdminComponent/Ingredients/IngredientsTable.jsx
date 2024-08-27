@@ -1,9 +1,10 @@
-import { Create } from '@mui/icons-material';
+import { Create, Delete } from '@mui/icons-material';
 import { Box, Card, CardHeader, IconButton, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import CreateIngredientForm from './CreateIngredientForm';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteIngredientById, getIngredientItemsByRestaurant } from '../../component/State/IngredientItem/Actions';
 
-const orders = [1, 1, 1, 1];
 const style = {
   position: 'absolute',
   top: '50%',
@@ -16,10 +17,21 @@ const style = {
   p: 4,
 };
 
-const IngredientTable = () => {
+const IngredientTable = ({ restaurant }) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const dispatch = useDispatch();
+  const jwt = localStorage.getItem("jwt")
+
+  const handleDelete = (ingredientId) => {
+    dispatch(deleteIngredientById({ ingredientId: ingredientId, jwt: jwt }))
+  }
+  useEffect(() => {
+    dispatch(getIngredientItemsByRestaurant({ restaurantId: restaurant.id, jwt: jwt }))
+  }, [])
+  const ingredients = useSelector(state => state.ingredientItem.ingredientItems)
+
 
   return (
     <Box>
@@ -42,20 +54,26 @@ const IngredientTable = () => {
                 <TableCell align="left">Name</TableCell>
                 <TableCell align="left">Category</TableCell>
                 <TableCell align="left">Avaibility</TableCell>
+                <TableCell align='left'>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {orders.map((row) => (
+              {ingredients.map((row, index) => (
                 <TableRow
                   key={row.name}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
-                    {1}
+                    {index + 1}
                   </TableCell>
-                  <TableCell align="left">{"name 1"}</TableCell>
-                  <TableCell align="left">{"category 1"}</TableCell>
-                  <TableCell align="left">{"IN STOCK"}</TableCell>
+                  <TableCell align="left">{row.name}</TableCell>
+                  <TableCell align="left">{row.categoryName}</TableCell>
+                  <TableCell align="left">{row.status ? 'IN STOCK' : 'NOT IN STOCK'}</TableCell>
+                  <TableCell align='left'>
+                    <IconButton onClick={() => handleDelete(row.id)}>
+                      <Delete />
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

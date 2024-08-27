@@ -1,7 +1,9 @@
-import { Create } from '@mui/icons-material';
+import { Create, Delete } from '@mui/icons-material';
 import { Box, Card, CardHeader, IconButton, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import CreateIngredientCategoryForm from './CreateIngredientCategoryForm';
+import { deleteIngredientCategoryById, getIngredientCategoriesByRestaurant } from '../../component/State/IngredientItem/Actions';
+import { useDispatch, useSelector } from 'react-redux';
 
 const orders = [1, 1, 1, 1];
 const style = {
@@ -15,10 +17,20 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-const IngredientsCategoryTable = () => {
+const IngredientsCategoryTable = ({ restaurant }) => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const dispatch = useDispatch();
+  const jwt = localStorage.getItem("jwt")
+
+  const handleDelete = (categoryId) => {
+    dispatch(deleteIngredientCategoryById({ ingredientCategoryId: categoryId, jwt: jwt }))
+  }
+  useEffect(() => {
+    dispatch(getIngredientCategoriesByRestaurant({ restaurantId: restaurant.id, jwt: jwt }))
+  }, [])
+  const categories = useSelector(state => state.ingredientItem.ingredientCategories)
 
   return (
     <Box>
@@ -37,18 +49,24 @@ const IngredientsCategoryTable = () => {
               <TableRow>
                 <TableCell align='left'>ID</TableCell>
                 <TableCell align="left">Name</TableCell>
+                <TableCell align='left'>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {orders.map((row) => (
+              {categories.map((row, index) => (
                 <TableRow
-                  key={row.name}
+                  key={index}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
-                    {1}
+                    {index + 1}
                   </TableCell>
-                  <TableCell align="left">{"category 1"}</TableCell>
+                  <TableCell align="left">{row.name}</TableCell>
+                  <TableCell align='left'>
+                    <IconButton onClick={() => handleDelete(row.id)}>
+                      <Delete />
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
