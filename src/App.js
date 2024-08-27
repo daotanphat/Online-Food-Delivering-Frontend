@@ -9,6 +9,7 @@ import { getUser } from './component/State/Authentication/Action';
 import { getCartByUserId } from './component/State/Cart/Actions';
 import { BrowserRouter } from 'react-router-dom';
 import Router from './Routers/Router';
+import { getRestaurantByUserId } from './component/State/Restaurant/Actions';
 
 function App() {
   const dispatch = useDispatch()
@@ -17,8 +18,9 @@ function App() {
 
   useEffect(() => {
     dispatch(getUser(authJwt || jwt))
-    dispatch(getCartByUserId(jwt))
-  }, [])
+    dispatch(getCartByUserId(authJwt || jwt))
+    dispatch(getRestaurantByUserId(authJwt || jwt))
+  }, [authJwt])
   return (
     <div className="App">
       <BrowserRouter>
