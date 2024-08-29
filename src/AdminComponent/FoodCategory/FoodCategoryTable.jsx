@@ -34,10 +34,10 @@ const FoodCategoryTable = () => {
     const handleDelete = (categoryId) => {
         dispatch(deleteFoodCategoryById({ foodCategoryId: categoryId, jwt: jwt }))
     }
-    const restaurantId = useSelector(state => state.restaurant.restaurant.id)
+    const restaurant = useSelector(state => state.restaurant.restaurant)
     useEffect(() => {
-        dispatch(getFoodCategoryByRestaurantId({ restaurantId, jwt }))
-    }, [])
+        dispatch(getFoodCategoryByRestaurantId({ restaurantId: restaurant.id, jwt: jwt }))
+    }, [restaurant])
     const category = useSelector(state => state.category.categories)
 
     return (
