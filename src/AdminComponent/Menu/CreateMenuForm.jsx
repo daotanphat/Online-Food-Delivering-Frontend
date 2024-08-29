@@ -35,6 +35,7 @@ const CreateMenuForm = () => {
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
     const restaurantId = useSelector(state => state.restaurant.restaurant.id);
+    const restaurant = useSelector(state => state.restaurant.restaurant);
     const formik = useFormik({
         initialValues,
         onSubmit: (values) => {
@@ -55,18 +56,12 @@ const CreateMenuForm = () => {
         updatedImage.splice(index, 1)
         formik.setFieldValue("images", updatedImage)
     }
-
-    useEffect(() => {
-        dispatch(getFoodCategoryByRestaurantId({ restaurantId, jwt }))
-    }, [])
     useEffect(() => {
         dispatch(getIngredientItemsByRestaurant({ restaurantId: restaurantId, jwt: jwt }))
-    }, [])
-    const categories = useSelector(state => state.category.categories)
+    }, [restaurant])
     const ingredients = useSelector(state => state.ingredientItem.ingredientItems)
 
-    console.log("TEST", categories);
-    console.log("TEST2", ingredients);
+
 
 
 
@@ -175,7 +170,7 @@ const CreateMenuForm = () => {
                                     label="Category"
                                     onChange={formik.handleChange}
                                 >
-                                    {categories.map((category) => <MenuItem value={category.id}>{category.name}</MenuItem>)}
+                                    {restaurant.categories.map((category) => <MenuItem value={category.id}>{category.name}</MenuItem>)}
                                 </Select>
                             </FormControl>
                         </Grid>

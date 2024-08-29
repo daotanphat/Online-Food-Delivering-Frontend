@@ -16,19 +16,23 @@ export const getFoodByRestaurant = ({ restaurantId, jwt }) => async (dispatch) =
     }
 }
 
-export const getFoodByRestaurantAndFilter = ({ restaurantId, jwt, foodType }) => async (dispatch) => {
+export const getFoodByRestaurantAndFilter = ({ restaurantId, jwt, categoryId }) => async (dispatch) => {
     dispatch({ type: GET_FOOD_BY_SEARCH_AND_FILTER_REQUEST })
     try {
-        const type = foodType === 'vegeterian' ? true : false
-        const response = await api.get(`/api/food/restaurant-filter/${restaurantId}?isVegetarian=${type}&isSeasonal=${!type}&categoryName=`, {
+        const response = await api.get(`/api/food/restaurant-filter/${restaurantId}?categoryId=${categoryId}`, {
             headers: {
                 Authorization: `Bearer ${jwt}`
             }
         })
         dispatch({ type: GET_FOOD_BY_RESTAURANT_ID_SUCCESS, payload: response.data })
+
     } catch (error) {
-        console.log(error);
-        dispatch({ type: GET_FOOD_BY_RESTAURANT_ID_FAILURE, payload: error })
+        if (error.response.status == 404) {
+            dispatch({ type: GET_FOOD_BY_RESTAURANT_ID_FAILURE, payload: error.response.data.message })
+        } else {
+            console.log(error);
+            dispatch({ type: GET_FOOD_BY_RESTAURANT_ID_FAILURE, payload: 'Something went wrong!' })
+        }
     }
 }
 

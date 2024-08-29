@@ -6,19 +6,13 @@ import { useNavigate } from 'react-router-dom';
 import { deleteFood, getFoodByRestaurant } from '../../component/State/Food/Actions';
 
 
-const orders = [1, 1, 1, 1];
-const MenuTable = () => {
+const MenuTable = ({menu}) => {
     const navigate = useNavigate();
-    const restaurant = useSelector(state => state.restaurant.restaurant)
     const dispatch = useDispatch()
     const jwt = localStorage.getItem("jwt")
-    useEffect(() => {
-        dispatch(getFoodByRestaurant({ restaurantId: restaurant.id, jwt: jwt }))
-    }, [])
     const handleDelete = (foodId) => {
         dispatch(deleteFood({ foodId: foodId, jwt: jwt }))
     }
-    const menu = useSelector(state => state.food.foods)
 
 
     return (
