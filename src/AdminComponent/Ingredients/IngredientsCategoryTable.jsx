@@ -17,19 +17,20 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-const IngredientsCategoryTable = ({ restaurant }) => {
+const IngredientsCategoryTable = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt")
+  const restaurant = useSelector(state => state.restaurant.restaurant);
 
   const handleDelete = (categoryId) => {
     dispatch(deleteIngredientCategoryById({ ingredientCategoryId: categoryId, jwt: jwt }))
   }
   useEffect(() => {
     dispatch(getIngredientCategoriesByRestaurant({ restaurantId: restaurant.id, jwt: jwt }))
-  }, [])
+  }, [restaurant])
   const categories = useSelector(state => state.ingredientItem.ingredientCategories)
 
   return (

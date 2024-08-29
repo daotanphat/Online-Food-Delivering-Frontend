@@ -1,9 +1,9 @@
 import { Create, Delete } from '@mui/icons-material';
-import { Box, Card, CardHeader, IconButton, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import { Box, Button, Card, CardHeader, IconButton, Modal, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import React, { useEffect } from 'react'
 import CreateIngredientForm from './CreateIngredientForm';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteIngredientById, getIngredientItemsByRestaurant } from '../../component/State/IngredientItem/Actions';
+import { deleteIngredientById, getIngredientItemsByRestaurant, updateIngredientStatusById } from '../../component/State/IngredientItem/Actions';
 
 const style = {
   position: 'absolute',
@@ -17,16 +17,26 @@ const style = {
   p: 4,
 };
 
-const IngredientTable = ({ restaurant }) => {
+const IngredientTable = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt")
+  const restaurant = useSelector(state => state.restaurant.restaurant);
 
   const handleDelete = (ingredientId) => {
     dispatch(deleteIngredientById({ ingredientId: ingredientId, jwt: jwt }))
   }
+  const updateIngredientStatus = (ingredientId) => {
+    // Optimistically update the UI before server response (optional)
+    dispatch(updateIngredientStatusById({ ingredientId, jwt })).then(() => {
+      // Fetch updated ingredients after status change
+      dispatch(getIngredientItemsByRestaurant({ restaurantId: restaurant.id, jwt }));
+    });
+  };
+  
+
   useEffect(() => {
     dispatch(getIngredientItemsByRestaurant({ restaurantId: restaurant.id, jwt: jwt }))
   }, [])
@@ -68,7 +78,11 @@ const IngredientTable = ({ restaurant }) => {
                   </TableCell>
                   <TableCell align="left">{row.name}</TableCell>
                   <TableCell align="left">{row.categoryName}</TableCell>
-                  <TableCell align="left">{row.status ? 'IN STOCK' : 'NOT IN STOCK'}</TableCell>
+                  <TableCell align="left">
+                    <Button onClick={() => updateIngredientStatus(row.id)}>
+                      {row.status ? 'IN STOCK' : 'OUT OF STOCK'}
+                    </Button>
+                  </TableCell>
                   <TableCell align='left'>
                     <IconButton onClick={() => handleDelete(row.id)}>
                       <Delete />
