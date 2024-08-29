@@ -1,31 +1,27 @@
 import { Info } from '@mui/icons-material'
-import { Box, Button, Card, CardHeader, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
+import { Box, Button, Card, CardHeader, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, IconButton, InputLabel, Menu, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { updateOrderStatus } from '../../component/State/Order/Actions'
+import { getOrderByRestaurant } from '../State/Order/Actions'
 
-
-const OrderTable = ({ orders }) => {
+const OrderTable = ({ orders, filterValue }) => {
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt")
+    const restaurantId = useSelector((state) => state.restaurant.restaurant.id)
+
     const [anchorEl, setAnchorEl] = useState(null);
     const [currentRow, setCurrentRow] = useState(null);
     const [selectedStatus, setSelectedStatus] = useState('');
     const [open, setOpen] = useState(false);
 
-    const handleClick = (event, row) => {
-        setAnchorEl(event.currentTarget);
-        setCurrentRow(row);
-    };
-
-    const handleClose = () => {
+    const handleStatusChange = (event, row) => {
+        const selectedStatus = event.target.value;
+        setSelectedStatus(selectedStatus);
         setAnchorEl(null);
-    };
-
-    const handleStatusChange = (status) => {
-        setSelectedStatus(status);
-        setAnchorEl(null);
-        dispatch(updateOrderStatus({ orderId: currentRow.id, status: selectedStatus, jwt: jwt }))
+        dispatch(updateOrderStatus({ orderId: row.id, status: selectedStatus, jwt: jwt })).then(() => {
+            dispatch(getOrderByRestaurant({ restaurantId: restaurantId, status: filterValue, jwt: jwt }))
+        })
     };
 
     const handleOpenModal = (row) => {
@@ -69,35 +65,18 @@ const OrderTable = ({ orders }) => {
                                     <TableCell align="right">{row.customer.email}</TableCell>
                                     <TableCell align="right">{row.totalPrice}</TableCell>
                                     <TableCell align="right">{row.createAt}</TableCell>
-                                    <TableCell align="right">
-                                        <Button
-                                            aria-controls="status-menu"
-                                            aria-haspopup="true"
-                                            onClick={(event) => handleClick(event, row)}
-                                            variant="outlined"
-                                            color="primary"
-                                        >
-                                            {row.status || 'Select Status'}
-                                        </Button>
-                                        <Menu
-                                            id="status-menu"
-                                            anchorEl={anchorEl}
-                                            keepMounted
-                                            open={Boolean(anchorEl)}
-                                            onClose={handleClose}
-                                        >
-                                            <MenuItem
-                                                onClick={() => handleStatusChange('PENDING')}
+                                    <TableCell>
+                                        <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
+                                            <Select
+                                                labelId="demo-simple-select-filled-label"
+                                                id="demo-simple-select-filled"
+                                                value={row.status}
+                                                onChange={(event) => handleStatusChange(event, row)}
                                             >
-                                                PENDING
-                                            </MenuItem>
-                                            <MenuItem
-                                                onClick={() => handleStatusChange('COMPLETED')}
-                                                sx={{ color: 'green' }} // Style for completed status
-                                            >
-                                                COMPLETED
-                                            </MenuItem>
-                                        </Menu>
+                                                <MenuItem value={"PENDING"}>PENDING</MenuItem>
+                                                <MenuItem value={"COMPLETED"}>COMPLETED</MenuItem>
+                                            </Select>
+                                        </FormControl>
                                     </TableCell>
                                     <TableCell align="right">
                                         <IconButton onClick={() => handleOpenModal(row)}>
@@ -142,9 +121,9 @@ const OrderTable = ({ orders }) => {
                                     ))}
                                     <TableRow>
                                         <TableCell></TableCell>
-                                        <TableCell sx={{ fontWeight:'bold' }}>TOTAL</TableCell>
-                                        <TableCell sx={{ fontWeight:'bold' }}>{currentRow.totalItem}</TableCell>
-                                        <TableCell sx={{ fontWeight:'bold' }}>{currentRow.totalPrice}</TableCell>
+                                        <TableCell sx={{ fontWeight: 'bold' }}>TOTAL</TableCell>
+                                        <TableCell sx={{ fontWeight: 'bold' }}>{currentRow.totalItem}</TableCell>
+                                        <TableCell sx={{ fontWeight: 'bold' }}>{currentRow.totalPrice}</TableCell>
                                     </TableRow>
                                 </TableBody>
                             </Table>

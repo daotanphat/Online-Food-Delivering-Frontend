@@ -44,7 +44,7 @@ const Order = () => {
           </RadioGroup>
         </FormControl>
       </Card>
-      <OrderTable orders={orders}></OrderTable>
+      <OrderTable orders={orders} filterValue={filterValue}></OrderTable>
     </div>
   )
 }
