@@ -10,6 +10,8 @@ import { getCartByUserId } from './component/State/Cart/Actions';
 import { BrowserRouter } from 'react-router-dom';
 import Router from './Routers/Router';
 import { getRestaurantByUserId } from './component/State/Restaurant/Actions';
+import { PersistGate } from 'redux-persist/lib/integration/react';
+import { persistor } from './component/State/Store';
 
 function App() {
   const dispatch = useDispatch()
@@ -19,17 +21,23 @@ function App() {
   useEffect(() => {
     dispatch(getUser(authJwt || jwt))
     dispatch(getCartByUserId(authJwt || jwt))
-    dispatch(getRestaurantByUserId(authJwt || jwt))
   }, [authJwt])
+
+  const user = useSelector(state => state.auth.user)
+  useEffect(() => {
+    dispatch(getRestaurantByUserId(authJwt || jwt))
+  }, [])
   return (
-    <div className="App">
-      <BrowserRouter>
-        <ThemeProvider theme={darkTheme}>
-          <CssBaseline />
-          <Router />
-        </ThemeProvider>
-      </BrowserRouter>
-    </div>
+    <PersistGate loading={null} persistor={persistor}>
+      <div className="App">
+        <BrowserRouter>
+          <ThemeProvider theme={darkTheme}>
+            <CssBaseline />
+            <Router />
+          </ThemeProvider>
+        </BrowserRouter>
+      </div>
+    </PersistGate>
   );
 }
 
