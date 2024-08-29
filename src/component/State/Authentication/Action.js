@@ -1,6 +1,7 @@
 import { ADD_TO_FAVORITE_FAILURE, ADD_TO_FAVORITE_REQUEST, ADD_TO_FAVORITE_SUCCESS, GET_USER_FAILURE, GET_USER_REQUEST, GET_USER_SUCCESS, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, LOGOUT, REGISTER_FAILURE, REGISTER_REQUEST, REGISTER_SUCCESS } from "./ActionType"
 import axios from "axios"
 import { api, API_URL } from "../../Config/Api"
+import storage from "redux-persist/lib/storage"
 
 export const registerUser = (requestData) => async (dispatch) => {
     dispatch({ type: REGISTER_REQUEST })
@@ -71,10 +72,9 @@ export const addToFavorite = ({ jwt, restaurantId }) => async (dispatch) => {
 }
 
 export const logOut = () => async (dispatch) => {
-    dispatch({ type: LOGOUT })
     try {
-        console.log("out");
         localStorage.clear();
+        storage.removeItem('persist:root');
         dispatch({ type: LOGOUT })
     } catch (error) {
         console.log("error", error);
