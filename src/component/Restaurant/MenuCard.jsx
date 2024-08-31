@@ -29,8 +29,9 @@ const MenuCard = React.memo(({ item }) => {
         quantity: 1,
         ingredients: selectedIngredients
     }
+    console.log(requestData);
+    
     dispatch(addItemToCart({ requestCartItem: requestData, jwt }))
-    console.log("checkbox: ", requestData);
   }
 
   return (

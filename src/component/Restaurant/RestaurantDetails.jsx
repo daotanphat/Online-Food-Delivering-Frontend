@@ -102,7 +102,7 @@ const RestaurantDetails = () => {
                             </FormControl>
                         </div>
                         <Divider /> */}
-                        {restaurant.categories && <div>
+                        {restaurant?.categories && <div>
                             <Typography variant='h5' sx={{ paddingBottom: "1rem" }}>
                                 Food Category
                             </Typography>

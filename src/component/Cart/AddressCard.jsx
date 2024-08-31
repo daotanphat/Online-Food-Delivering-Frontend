@@ -2,20 +2,26 @@ import React from 'react'
 import HomeIcon from '@mui/icons-material/Home';
 import { Button, Card } from '@mui/material';
 
-const AddressCard = ({ item, showButton, handleSelectAddress }) => {
+const AddressCard = ({ item, showButton, handleSelectAddress, selectedAddress }) => {
   return (
-    <Card className='flex gap-5 w-64 p-5'>
-      <HomeIcon />
-      <div className='space-y-3 text-gray-500'>
-        <h1 className='font-semibold text-lg text-white'>Address</h1>
-        <p>{item.streetAddress}</p>
-        <p>{item.stateProvince}</p>
-        <p>{item.city}</p>
-        <p>{item.country}</p>
-        {showButton && <Button variant='outlined' fullWidth onClick={() => handleSelectAddress(item)}>Select</Button>}
+    <div className='m-5 flex w-full p-5 border rounded-md'>
+      <div className='flex flex-col items-center gap-3'>
+        <HomeIcon />
+        {showButton && (
+          <input
+            type="radio"
+            name="favoriteAddress"
+            checked={selectedAddress?.id === item.id}
+            onChange={() => handleSelectAddress(item)}
+          />
+        )}
       </div>
-    </Card>
-  )
+      <div className='flex-grow space-y-3 text-gray-500 ml-5'>
+        <h1 className='font-semibold text-lg text-white'>Address</h1>
+        <p>{item.streetAddress}, {item.stateProvince}, {item.city}, {item.country}</p>
+      </div>
+    </div>
+  );
 }
 
 export default AddressCard

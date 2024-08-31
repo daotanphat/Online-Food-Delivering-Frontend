@@ -25,8 +25,10 @@ function App() {
 
   const user = useSelector(state => state.auth.user)
   useEffect(() => {
-    dispatch(getRestaurantByUserId(authJwt || jwt))
-  }, [])
+    if (user && user.role !== 'CUSTOMER') {
+      dispatch(getRestaurantByUserId(authJwt || jwt))
+    }
+  }, [user])
   return (
     <PersistGate loading={null} persistor={persistor}>
       <div className="App">

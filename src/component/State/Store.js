@@ -10,6 +10,7 @@ import { orderReducer } from "./Order/Reducer";
 import { orderAdminReducer } from "../../AdminComponent/State/Order/Reducer";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
+import { paymentReducer } from "./Payment/Reducer";
 
 const rooteReducer = combineReducers({
     auth: authReducer,
@@ -19,7 +20,8 @@ const rooteReducer = combineReducers({
     ingredientItem: ingredientItemReducer,
     cart: cartReducer,
     order: orderReducer,
-    orderAdmin: orderAdminReducer
+    orderAdmin: orderAdminReducer,
+    payment: paymentReducer
 })
 
 const rootReducer = (state, action) => {
